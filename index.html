@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MyMadrassa - Quran Memorization Planner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #e8d5a3;
+    --gold-dark: #a07830;
+    --black: #1a1a1a;
+    --charcoal: #2c2c2c;
+    --grey: #f5f5f5;
+    --grey-mid: #e0e0e0;
+    --white: #ffffff;
+    --green: #2d6a4f;
+    --green-light: #e8f5ee;
+    --rest: #8a8a8a;
+    --rest-light: #f0f0f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #fafaf8;
+    color: var(--black);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--white);
+    border-bottom: 2px solid var(--gold);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(201,168,76,0.1);
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .arch-logo {
+    width: 52px;
+    height: 60px;
+  }
+
+  .logo-text h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--black);
+  }
+
+  .logo-text p {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--charcoal);
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* FORM CARD */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--gold-light);
+    border-top: 4px solid var(--gold);
+    border-radius: 2px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+  }
+
+  .form-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--black);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .form-subtitle {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 24px 0;
+  }
+
+  .form-section-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--charcoal);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .form-group input,
+  .form-group select {
+    border: 1px solid var(--grey-mid);
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    color: var(--black);
+    background: #fafaf8;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--gold);
+    background: var(--white);
+  }
+
+  .btn-generate {
+    background: var(--black);
+    color: var(--gold);
+    border: none;
+    padding: 14px 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+
+  .btn-generate:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .btn-print {
+    background: transparent;
+    color: var(--charcoal);
+    border: 1px solid var(--grey-mid);
+    padding: 14px 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+    margin-top: 10px;
+    margin-left: 12px;
+  }
+
+  .btn-print:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* SUMMARY CARD */
+  .summary-card {
+    background: var(--black);
+    color: var(--white);
+    border-radius: 2px;
+    padding: 32px 40px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 24px;
+  }
+
+  .summary-item {
+    text-align: center;
+  }
+
+  .summary-item .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    color: var(--gold);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .summary-item .label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .summary-name {
+    grid-column: 1 / -1;
+    text-align: center;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding-bottom: 20px;
+    margin-bottom: 4px;
+  }
+
+  .summary-name h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--white);
+    font-weight: 400;
+    letter-spacing: 2px;
+  }
+
+  .summary-name p {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* PROGRESS BAR */
+  .progress-section {
+    background: var(--white);
+    border: 1px solid var(--gold-light);
+    padding: 24px 32px;
+    margin-bottom: 32px;
+    border-radius: 2px;
+  }
+
+  .progress-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .progress-bar-wrap {
+    background: var(--grey);
+    border-radius: 2px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--gold-dark), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--gold-dark);
+    letter-spacing: 1px;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--charcoal);
+    text-transform: uppercase;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot-memo { background: var(--green); }
+  .dot-revision { background: var(--gold); }
+  .dot-rest { background: var(--rest); }
+
+  /* SCHEDULE TABLE */
+  .schedule-wrapper {
+    background: var(--white);
+    border: 1px solid var(--gold-light);
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+  }
+
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .schedule-table thead tr {
+    background: var(--black);
+  }
+
+  .schedule-table thead th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .schedule-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+  }
+
+  .schedule-table tbody tr:hover {
+    background: #fdfdf9;
+  }
+
+  .schedule-table tbody td {
+    padding: 14px 16px;
+    font-size: 12px;
+    vertical-align: top;
+  }
+
+  /* ROW TYPES */
+  tr.row-memo {
+    border-left: 3px solid var(--green);
+  }
+
+  tr.row-revision {
+    background: #fffbf0;
+    border-left: 3px solid var(--gold);
+  }
+
+  tr.row-rest {
+    background: #f8f8f8;
+    border-left: 3px solid var(--rest);
+    opacity: 0.7;
+  }
+
+  tr.row-completed {
+    opacity: 0.5;
+  }
+
+  tr.row-completed td {
+    text-decoration: line-through;
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .badge-memo { background: var(--green-light); color: var(--green); }
+  .badge-revision { background: #fff3cd; color: var(--gold-dark); }
+  .badge-rest { background: var(--rest-light); color: var(--rest); }
+
+  /* REVISION LIST */
+  .revision-list {
+    list-style: none;
+    margin-top: 4px;
+  }
+
+  .revision-list li {
+    font-size: 11px;
+    color: var(--charcoal);
+    padding: 2px 0;
+  }
+
+  .revision-list li span {
+    color: var(--gold-dark);
+    font-weight: 600;
+  }
+
+  .memorize-text {
+    font-weight: 600;
+    color: var(--green);
+    font-size: 12px;
+  }
+
+  /* CHECKBOX */
+  .check-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .day-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--gold);
+  }
+
+  /* PAGE BADGE */
+  .page-badge {
+    display: inline-block;
+    background: var(--black);
+    color: var(--gold);
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* BUTTONS ROW */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+
+  /* HIDDEN */
+  .hidden { display: none; }
+
+  /* PRINT */
+  @media print {
+    header, .form-card, .btn-row, .legend, .check-wrap, .progress-section { display: none !important; }
+    body { background: white; }
+    .summary-card { background: #1a1a1a !important; -webkit-print-color-adjust: exact; }
+    .schedule-wrapper { box-shadow: none; }
+    tr.row-revision { background: #fffbf0 !important; -webkit-print-color-adjust: exact; }
+    tr.row-rest { background: #f8f8f8 !important; -webkit-print-color-adjust: exact; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    header { padding: 16px 20px; flex-direction: column; gap: 10px; text-align: center; }
+    .form-card { padding: 24px 16px; }
+    main { padding: 20px 12px; }
+    .summary-card { padding: 24px 16px; }
+    .schedule-table thead th:nth-child(3),
+    .schedule-table tbody td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-area">
+    <svg class="arch-logo" viewBox="0 0 52 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M26 2 L48 22 L48 58 L4 58 L4 22 Z" stroke="#1a1a1a" stroke-width="3" fill="none"/>
+      <path d="M26 2 L4 22" stroke="#1a1a1a" stroke-width="3"/>
+      <path d="M26 2 L48 22" stroke="#1a1a1a" stroke-width="3"/>
+      <path d="M14 58 L14 36 Q14 22 26 22 Q38 22 38 36 L38 58" stroke="#C9A84C" stroke-width="2.5" fill="none"/>
+    </svg>
+    <div class="logo-text">
+      <h1>MYMADRASSA</h1>
+      <p>ONLINE PLATFORM</p>
+    </div>
+  </div>
+  <div class="header-title">Quran Memorization Planner</div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- FORM -->
+  <div class="form-card" id="formCard">
+    <h2>Create Your Memorization Plan</h2>
+    <div class="form-subtitle">Fill in your details below</div>
+
+    <div class="form-section-title">Student Information</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Student Name</label>
+        <input type="text" id="studentName" placeholder="Enter full name" />
+      </div>
+      <div class="form-group">
+        <label>Start Date</label>
+        <input type="date" id="startDate" />
+      </div>
+    </div>
+
+    <div class="gold-divider"></div>
+    <div class="form-section-title">Quran Settings</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Starting Page</label>
+        <input type="number" id="startPage" value="1" min="1" max="604" />
+      </div>
+      <div class="form-group">
+        <label>Starting Line</label>
+        <input type="number" id="startLine" value="1" min="1" max="15" />
+      </div>
+      <div class="form-group">
+        <label>Total Pages to Memorize</label>
+        <input type="number" id="totalPages" value="10" min="1" max="604" />
+      </div>
+      <div class="form-group">
+        <label>Lines Per Page</label>
+        <input type="number" id="linesPerPage" value="15" min="1" max="20" />
+      </div>
+    </div>
+
+    <div class="gold-divider"></div>
+    <div class="form-section-title">Schedule Settings</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Lines Per Day</label>
+        <input type="number" id="linesPerDay" value="1" min="1" max="5" />
+      </div>
+      <div class="form-group">
+        <label>Revision Day</label>
+        <select id="revisionDay">
+          <option value="0">Sunday</option>
+          <option value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6" selected>Saturday</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rest Day</label>
+        <select id="restDay">
+          <option value="0" selected>Sunday</option>
+          <option value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6">Saturday</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:8px;">
+      <button class="btn-generate" onclick="generateSchedule()">Generate Schedule</button>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="output" class="hidden">
+
+    <!-- SUMMARY -->
+    <div class="summary-card" id="summaryCard">
+      <div class="summary-name">
+        <h3 id="summaryName"></h3>
+        <p>Memorization Schedule</p>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="sumTotalDays"></div>
+        <div class="label">Total Days</div>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="sumMemoDays"></div>
+        <div class="label">Memorization Days</div>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="sumRevDays"></div>
+        <div class="label">Revision Days</div>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="sumPages"></div>
+        <div class="label">Total Pages</div>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="sumLines"></div>
+        <div class="label">Total Lines</div>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="sumWeeks"></div>
+        <div class="label">Total Weeks</div>
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-section">
+      <h3>Overall Progress</h3>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="overallBar" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="overallLabel">0% complete</div>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="btn-row">
+      <button class="btn-generate" onclick="window.print()">Print Schedule</button>
+      <button class="btn-print" onclick="resetProgress()">Reset Progress</button>
+      <button class="btn-print" onclick="scrollToTop()">Edit Settings</button>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot dot-memo"></div> Memorization Day</div>
+      <div class="legend-item"><div class="legend-dot dot-revision"></div> Revision Day</div>
+      <div class="legend-item"><div class="legend-dot dot-rest"></div> Rest Day</div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="schedule-wrapper">
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th style="width:40px;"></th>
+            <th>Day</th>
+            <th>Date</th>
+            <th>Day Name</th>
+            <th>Type</th>
+            <th>Memorize</th>
+            <th>Revise</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  let scheduleData = [];
+  let completedDays = {};
+
+  function getRepeatTimes(daysSince) {
+    if (daysSince === 0) return 20;
+    if (daysSince === 1) return 10;
+    return 5;
+  }
+
+  function formatDate(date) {
+    return date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  function generateSchedule() {
+    // Get inputs
+    const name = document.getElementById('studentName').value || 'Student';
+    const startDateVal = document.getElementById('startDate').value;
+    const startPage = parseInt(document.getElementById('startPage').value) || 1;
+    const startLine = parseInt(document.getElementById('startLine').value) || 1;
+    const totalPages = parseInt(document.getElementById('totalPages').value) || 10;
+    const linesPerPage = parseInt(document.getElementById('linesPerPage').value) || 15;
+    const linesPerDay = parseInt(document.getElementById('linesPerDay').value) || 1;
+    const revDay = parseInt(document.getElementById('revisionDay').value);
+    const rstDay = parseInt(document.getElementById('restDay').value);
+
+    if (!startDateVal) { alert('Please enter a start date'); return; }
+
+    const startDate = new Date(startDateVal);
+
+    // Calculate total lines
+    const firstPageLines = linesPerPage - startLine + 1;
+    const totalLines = firstPageLines + (totalPages - 1) * linesPerPage;
+
+    // Build line list
+    let lines = [];
+    let currentPage = startPage;
+    let currentLine = startLine;
+    for (let i = 0; i < totalLines; i++) {
+      lines.push({ page: currentPage, line: currentLine });
+      currentLine++;
+      if (currentLine > linesPerPage) {
+        currentLine = 1;
+        currentPage++;
+      }
+    }
+
+    // Build schedule
+    scheduleData = [];
+    let lineIndex = 0;
+    let memorizedLines = [];
+    let dayCount = 0;
+    let memoCount = 0;
+    let revCount = 0;
+    let currentDate = new Date(startDate);
+
+    // Load saved progress
+    const savedKey = 'mymadrassa_' + name.replace(/\s/g,'') + '_' + startDateVal;
+    const savedProgress = JSON.parse(localStorage.getItem(savedKey) || '{}');
+    completedDays = savedProgress;
+
+    while (lineIndex < lines.length) {
+      dayCount++;
+      const dow = currentDate.getDay();
+      const dateStr = formatDate(currentDate);
+      const dayName = DAYS[dow];
+
+      if (dow === rstDay) {
+        scheduleData.push({
+          day: dayCount,
+          date: dateStr,
+          dayName: dayName,
+          type: 'rest',
+          memorize: [],
+          revise: []
+        });
+      } else if (dow === revDay) {
+        revCount++;
+        // Revise all memorized lines 5 times
+        let revList = memorizedLines.map(l => ({ line: l, times: 5 }));
+        scheduleData.push({
+          day: dayCount,
+          date: dateStr,
+          dayName: dayName,
+          type: 'revision',
+          memorize: [],
+          revise: revList
+        });
+      } else {
+        memoCount++;
+        // Build revision list for today
+        let revList = [];
+        memorizedLines.forEach((ml, idx) => {
+          const daysSince = memoCount - ml.memoDay - 1;
+          const times = getRepeatTimes(daysSince);
+          revList.push({ line: ml, times: times });
+        });
+
+        // Memorize new lines
+        let newLines = [];
+        for (let l = 0; l < linesPerDay && lineIndex < lines.length; l++) {
+          newLines.push(lines[lineIndex]);
+          memorizedLines.push({ ...lines[lineIndex], memoDay: memoCount });
+          lineIndex++;
+        }
+
+        scheduleData.push({
+          day: dayCount,
+          date: dateStr,
+          dayName: dayName,
+          type: 'memo',
+          memorize: newLines,
+          revise: revList
+        });
+      }
+
+      // next day
+      currentDate.setDate(currentDate.getDate() + 1);
+
+      // Safety limit
+      if (dayCount > 5000) break;
+    }
+
+    // Render
+    renderSchedule(name, totalPages, totalLines, memoCount, revCount, dayCount, savedKey);
+  }
+
+  function renderSchedule(name, totalPages, totalLines, memoCount, revCount, totalDays, savedKey) {
+    // Summary
+    document.getElementById('summaryName').textContent = name;
+    document.getElementById('sumTotalDays').textContent = totalDays;
+    document.getElementById('sumMemoDays').textContent = memoCount;
+    document.getElementById('sumRevDays').textContent = revCount;
+    document.getElementById('sumPages').textContent = totalPages;
+    document.getElementById('sumLines').textContent = totalLines;
+    document.getElementById('sumWeeks').textContent = Math.ceil(totalDays / 7);
+
+    // Table
+    const tbody = document.getElementById('scheduleBody');
+    tbody.innerHTML = '';
+
+    scheduleData.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      const isCompleted = completedDays[idx] === true;
+
+      if (row.type === 'rest') tr.className = 'row-rest' + (isCompleted ? ' row-completed' : '');
+      else if (row.type === 'revision') tr.className = 'row-revision' + (isCompleted ? ' row-completed' : '');
+      else tr.className = 'row-memo' + (isCompleted ? ' row-completed' : '');
+
+      // Checkbox
+      const tdCheck = document.createElement('td');
+      tdCheck.innerHTML = `<div class="check-wrap"><input type="checkbox" class="day-checkbox" data-idx="${idx}" ${isCompleted ? 'checked' : ''} onchange="toggleDay(${idx}, '${savedKey}')"/></div>`;
+
+      // Day number
+      const tdDay = document.createElement('td');
+      tdDay.style.fontWeight = '600';
+      tdDay.style.fontFamily = 'Cormorant Garamond, serif';
+      tdDay.style.fontSize = '16px';
+      tdDay.textContent = row.day;
+
+      // Date
+      const tdDate = document.createElement('td');
+      tdDate.style.color = '#888';
+      tdDate.style.fontSize = '11px';
+      tdDate.textContent = row.date;
+
+      // Day name
+      const tdDayName = document.createElement('td');
+      tdDayName.style.fontSize = '11px';
+      tdDayName.style.letterSpacing = '1px';
+      tdDayName.textContent = row.dayName;
+
+      // Type badge
+      const tdType = document.createElement('td');
+      if (row.type === 'memo') tdType.innerHTML = '<span class="badge badge-memo">Memorize</span>';
+      else if (row.type === 'revision') tdType.innerHTML = '<span class="badge badge-revision">Revision</span>';
+      else tdType.innerHTML = '<span class="badge badge-rest">Rest</span>';
+
+      // Memorize
+      const tdMemo = document.createElement('td');
+      if (row.type === 'rest') {
+        tdMemo.innerHTML = '<span style="color:#aaa;font-size:11px;">— Rest Day —</span>';
+      } else if (row.type === 'revision') {
+        tdMemo.innerHTML = '<span style="color:#aaa;font-size:11px;">Full Revision</span>';
+      } else if (row.memorize.length > 0) {
+        let html = '';
+        row.memorize.forEach(ml => {
+          const pageLabel = ml.line === 1 ? `<span class="page-badge">PAGE ${ml.page}</span>` : '';
+          html += `<div class="memorize-text">Page ${ml.page} — Line ${ml.line} ${pageLabel}</div>`;
+        });
+        tdMemo.innerHTML = html;
+      }
+
+      // Revise
+      const tdRevise = document.createElement('td');
+      if (row.type === 'rest') {
+        tdRevise.innerHTML = '';
+      } else if (row.revise.length === 0) {
+        tdRevise.innerHTML = '<span style="color:#aaa;font-size:11px;">No revision yet</span>';
+      } else {
+        let ul = '<ul class="revision-list">';
+        row.revise.forEach(r => {
+          ul += `<li>Pg ${r.line.page} Ln ${r.line.line} — <span>${r.times}×</span></li>`;
+        });
+        ul += '</ul>';
+        tdRevise.innerHTML = ul;
+      }
+
+      tr.appendChild(tdCheck);
+      tr.appendChild(tdDay);
+      tr.appendChild(tdDate);
+      tr.appendChild(tdDayName);
+      tr.appendChild(tdType);
+      tr.appendChild(tdMemo);
+      tr.appendChild(tdRevise);
+      tbody.appendChild(tr);
+    });
+
+    updateProgress();
+    document.getElementById('output').classList.remove('hidden');
+    document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+
+    // Store key globally
+    window.currentSavedKey = savedKey;
+  }
+
+  function toggleDay(idx, savedKey) {
+    completedDays[idx] = !completedDays[idx];
+    localStorage.setItem(savedKey || window.currentSavedKey, JSON.stringify(completedDays));
+    const tr = document.querySelectorAll('#scheduleBody tr')[idx];
+    if (completedDays[idx]) tr.classList.add('row-completed');
+    else tr.classList.remove('row-completed');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = scheduleData.filter(r => r.type !== 'rest').length;
+    const done = Object.values(completedDays).filter(v => v === true).length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById('overallBar').style.width = pct + '%';
+    document.getElementById('overallLabel').textContent = pct + '% complete — ' + done + ' of ' + total + ' days done';
+  }
+
+  function resetProgress() {
+    if (!confirm('Reset all progress? This cannot be undone.')) return;
+    completedDays = {};
+    if (window.currentSavedKey) localStorage.removeItem(window.currentSavedKey);
+    document.querySelectorAll('.day-checkbox').forEach(cb => cb.checked = false);
+    document.querySelectorAll('#scheduleBody tr').forEach(tr => tr.classList.remove('row-completed'));
+    updateProgress();
+  }
+
+  function scrollToTop() {
+    document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Set today as default date
+  window.onload = function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').value = today;
+  };
+</script>
+</body>
+</html>
